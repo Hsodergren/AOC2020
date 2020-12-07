@@ -1,9 +1,8 @@
 open Core
-open Stdio
 
 let contains =
   let mem = Hashtbl.create (module String) in
-  let rec aux bags bag_color search_color =
+  let rec contains' bags bag_color search_color =
     match Hashtbl.find mem bag_color with
     | None ->
       let cont = List.Assoc.find_exn bags ~equal:String.equal bag_color in
@@ -11,21 +10,20 @@ let contains =
       then true
       else
         let v = List.exists
-            ~f:(fun (_,c) -> aux bags c search_color)
+            ~f:(fun (_,c) -> contains' bags c search_color)
             cont
         in
         Hashtbl.set mem ~key:bag_color ~data:v;
         v
     | Some v -> v
   in
-  aux
+  contains'
 
+(* part 1 *)
 let count bags color =
-  List.filter
-    ~f:(fun (c,_) -> contains bags c color)
-    bags
-  |> List.length
+  List.length @@ List.filter ~f:(fun (c,_) -> contains bags c color) bags
 
+(* part 2 *)
 let rec num_contains bags bag_color =
   let b = List.Assoc.find_exn ~equal:String.equal bags bag_color in
   1 +
