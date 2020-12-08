@@ -1,6 +1,6 @@
 open Core
 
-let contains =
+let contains : (string, (int * string) list) Base.List.Assoc.t -> string -> string -> bool =
   let mem = Hashtbl.create (module String) in
   let rec contains' bags bag_color search_color =
     match Hashtbl.find mem bag_color with
