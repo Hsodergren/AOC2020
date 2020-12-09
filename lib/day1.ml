@@ -19,7 +19,7 @@ let rec aux sum acc l n =
     | hd::tl ->
       aux (sum-hd) (hd::acc) tl (n-1) >>? fun () -> aux sum acc tl n
 
-let n_sum n sum l =
+let n_sum ~n ~sum l =
   aux sum [] l n
 
 
