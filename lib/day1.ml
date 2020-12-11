@@ -22,6 +22,21 @@ let rec aux sum acc l n =
 let n_sum ~n ~sum l =
   aux sum [] l n
 
+let all_n_sum ~n ~sum l =
+  let rec aux n l sum acc =
+    if sum < 0 then [] else
+    if n = 1
+    then
+      match List.find l ~f:(fun a -> a = sum) with
+      | Some v -> [v::acc]
+      | None -> []
+    else
+      match l with
+      | [] -> []
+      | hd::tl -> aux (n-1) tl (sum-hd) (hd::acc) @ aux n tl sum acc
+  in
+  aux n l sum []
+
 
 exception Result of int * int
 exception Result3 of int * int * int
