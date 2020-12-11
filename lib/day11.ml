@@ -3,14 +3,7 @@ open Core
 module Seat = struct
   type t = | Floor
            | Free
-           | Occupied
-
-  let equal a b =
-    match a,b with
-    | Free, Free -> true
-    | Floor, Floor -> true
-    | Occupied, Occupied -> true
-    | _ -> false
+           | Occupied [@@deriving eq]
 
   let of_char = function
     | '.' -> Floor
