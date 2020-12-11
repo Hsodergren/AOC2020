@@ -43,9 +43,10 @@ let map_adj mat ~f ~find_adj =
   done;
   copy
 
-let count_occ countf seats = countf seats ~f:(function | Seat.Occupied -> true | _ -> false)
+let count_occ countf seats =
+  countf seats ~f:(function | Seat.Occupied -> true | _ -> false)
 let count_occ_mat mat =
-  Array.fold ~f:(+) ~init:0 (Array.map ~f:(count_occ Array.count) mat)
+  Array.(fold ~f:(+) ~init:0 (map ~f:(count_occ count) mat))
 
 let f rec_occ seats v =
   let num_occ = count_occ List.count seats in
@@ -61,18 +62,18 @@ let do_untill_eq start ~f ~eq =
   in
   loop start
 
-let mat_eq a b = Array.equal (Array.equal Seat.equal) a b
+let mat_eq = Array.equal (Array.equal Seat.equal)
 
 let part1 mat =
   do_untill_eq
     ~eq:mat_eq
-    ~f:(fun mat -> map_adj ~f:(f 4) mat ~find_adj:get_adjecent_cells)
+    ~f:(fun mat -> map_adj mat ~f:(f 4) ~find_adj:get_adjecent_cells)
     mat
 
 let part2 mat =
   do_untill_eq
     ~eq:mat_eq
-    ~f:(fun mat -> map_adj ~f:(f 5) mat ~find_adj:get_adjecent_visible)
+    ~f:(fun mat -> map_adj mat ~f:(f 5) ~find_adj:get_adjecent_visible)
     mat
 
 let parse_lines lines =
