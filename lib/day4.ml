@@ -81,7 +81,7 @@ let ecl = p Parser.parse_ecl
 let pid = p Parser.parse_pid
 
 let int_between_opt i ~high ~low =
-  if Int.between i ~high ~low then Some i else None 
+  if Int.between i ~high ~low then Some i else None
 
 let t_of_assoc assoc =
   let open Option in

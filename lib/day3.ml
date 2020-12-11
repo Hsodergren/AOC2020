@@ -6,7 +6,7 @@ let get x arr =
   let len = Array.length arr in
   let idx = x mod len in
   arr.(idx)
-  
+
 let rec next dy t =
   if dy = 0 then t
   else

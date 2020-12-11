@@ -26,7 +26,7 @@ let rec traverse path t =
   | [],Node _ -> failwith "path not to a leaf"
 
 let rows = make_tree ~next:succ ~init:0 7
-let cols = make_tree ~next:succ ~init:0 3 
+let cols = make_tree ~next:succ ~init:0 3
 
 let char_to_trav = function | 'F' | 'L' -> `L
                             | 'B' | 'R' -> `R
@@ -45,17 +45,17 @@ let parse_one line =
   |> fun l -> List.split_n l 7
 
 let parse_file file =
-  In_channel.create file 
+  In_channel.create file
   |> In_channel.input_lines
   |> List.map ~f:(parse_one >> trav)
 
 let find_missing l =
-  let rec aux l = 
+  let rec aux l =
     match l with
     | hd1::(hd2::_ as tl ) ->
       if hd2 - hd1 = 1
       then aux tl
       else Some (hd1+1)
-    | [] | [_] -> None 
+    | [] | [_] -> None
   in
   aux (List.sort ~compare:Int.compare l)

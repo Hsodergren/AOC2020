@@ -17,7 +17,7 @@ end
 let string_to_set str =
   String.to_list str
   |> Char.Set.of_list
-       
+
 let get_uniq_answers strs =
   List.map ~f:string_to_set strs
   |> Char.Set.union_list

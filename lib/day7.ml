@@ -38,7 +38,7 @@ let parse str =
       (String.split ~on:'\n' str)
   in
   let get_color c1 c2 = c1 ^ " " ^ c2 in
-  let rec contains ws acc = 
+  let rec contains ws acc =
     match ws with
     | num::c1::c2::"bags,"::rest
     | ("1" as num)::c1::c2::"bag,"::rest ->
