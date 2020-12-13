@@ -46,20 +46,18 @@ let empty_status = { position = (0,0)
                    ; waypoint = (10,1)
                    ; heading = `E }
 
-let rec sail2 ({position;waypoint;_} as status) insts =
-  match insts with
-  | [] -> status
-  | P2.MoveWP f::tl -> sail2 {status with waypoint=f waypoint} tl
-  | Move_ship f::tl ->
-    sail2 {status with position=f ~wp:waypoint ~ship:position} tl
+let exec_inst1 ({position;heading; _} as status) = function
+  | P1.Move f -> {status with position=f position}
+  | Move_direction f -> {status with position=f heading position}
+  | Rotate f -> {status with heading=f heading}
 
-let rec sail1 ({position;heading; _} as status) insts =
-  match insts with
-  | [] -> status
-  | P1.Move f::tl -> sail1 {status with position=f position} tl
-  | Move_direction f::tl ->
-    sail1 {status with position=f heading position} tl
-  | Rotate f::tl -> sail1 {status with heading=f heading} tl
+let sail1 = List.fold ~f:exec_inst1 ~init:empty_status
+
+let exec_inst2 ({position;waypoint;_} as status) = function
+  | P2.MoveWP f -> {status with waypoint=f waypoint}
+  | Move_ship f -> {status with position=f ~wp:waypoint ~ship:position}
+
+let sail2 = List.fold ~f:exec_inst2 ~init:empty_status
 
 let inst1 ty num =
   let open Direction in
