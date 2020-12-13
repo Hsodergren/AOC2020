@@ -5,6 +5,7 @@ let closest_plus num i =
   div * i + i
 
 let find_bus n buses =
+  let buses = List.map ~f:snd buses in
   let min a b = if snd a < snd b then a else b in
   List.reduce_exn ~f:min (List.map ~f:(fun i -> i,closest_plus n i) buses)
 
