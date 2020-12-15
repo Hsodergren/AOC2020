@@ -12,3 +12,8 @@
  (name day11)
  (libraries lib)
  (modules day11))
+
+(executable
+ (name day15)
+ (libraries lib)
+ (modules day15))
