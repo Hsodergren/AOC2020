@@ -6,23 +6,12 @@ module Range : sig
   val empty: t
   val (<+>): t -> t -> t
   val valid: t -> int -> bool
-  val to_string: t -> string
 end = struct
   type t = Range of int * int
          | Concat of t * t
          | Empty [@@deriving show]
 
   let empty = Empty
-
-
-  let to_string v =
-    let rec aux = function
-      | Range (a,b) -> (string_of_int a) ^ "-" ^ (string_of_int b)
-      | Concat (l,r) -> aux l ^ " " ^ aux r
-      | Empty -> ""
-    in
-    "[" ^ aux v ^ "]"
-  let show = to_string
 
   let make lo hi =
     if lo < hi
@@ -54,8 +43,6 @@ end = struct
     | [] -> true
     | num::tl -> Range.valid range num && all_valid rule tl
 
-  let show (name,range) = sprintf "%-10s | %-10s" name (Range.show range)
-
   let equal (n1,_) (n2,_) = String.equal n1 n2
 
   let name (name,_) = name
@@ -63,21 +50,13 @@ end = struct
   let range (_,range) = range
 end
 
-let valid_num ranges x =
-  List.exists ranges ~f:(fun r -> Range.valid r x)
-
-let all_non_valid xs ranges =
-  List.filter xs ~f:(fun x -> not (valid_num ranges x))
+let all_non_valid xs range =
+  List.filter xs ~f:(fun x -> not (Range.valid range x))
 
 let get_valid_tickets tickets ranges =
   List.filter
     tickets
     ~f:(fun ticket -> List.is_empty (all_non_valid ticket ranges))
-
-let rec all ~pred l =
-  match l with
-  | hd::tl -> pred hd && all ~pred tl
-  | [] -> true
 
 let rec find_pop ~f l =
   match l with
@@ -169,7 +148,8 @@ end
 let p1 input =
   let ranges = List.map ~f:Rule.range input.rules
   and nums = List.join input.other_tickets in
-  all_non_valid nums ranges
+  all_non_valid nums (List.reduce_exn ~f:(Range.(<+>)) ranges)
+  |> List.fold ~f:(+) ~init:0
 
 let parse_file f =
   In_channel.create f
