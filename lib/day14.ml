@@ -62,14 +62,14 @@ end = struct
     aux (List.rev l) 0
 
   let combine (b1,b2) =
-    match b1,b2 with
-    | `X,_ -> b2
+    match b1 with
+    | `X -> b2
     | _ -> b1
 
   let combine2 (b1,b2) =
-    match b1,b2 with
-    | (`X | `One) ,_ -> b1
-    | _ -> b2
+    match b1 with
+    | `X | `One -> b1
+    | `Zero -> b2
 
   let mask_value i m =
     List.map ~f:combine (List.zip_exn m i)
